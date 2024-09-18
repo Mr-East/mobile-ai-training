@@ -1,39 +1,30 @@
-## 移动端布局方案
+# AI 智能陪练
 
-移动端 vant4.x + vue3.x + vite4.x + ts.4.x + REM 布局 + Viewport (VW) 布局的实例运用
+#### 模块一 权限管理
 
-## 在线预览
+- 员工与管理员角色管理
+- 登录注册
+- 权限、员工信息、增删改查
 
-http://buqiyuan.gitee.io/vite-vue3-h5
+#### 模块二 AI训练
 
-提供三个布局方案
+- AI对话互动，ws
+- 用户可手动结束对话互动，也可由大模型自动判断结束对话
 
-**1. REM 布局**
+#### 模块三 评分反馈
 
-使用 js 动态设置 html 的 font-size，css 使用 rem 单位，文本大小可选择使用 px
+- 运用 LAST 原则，在训练结束后给出训练成绩、各维度的评分说明和改进建议
 
-js 设置 viewport 的 scale 以支持高清设备的 1px
+#### 模块四 用户管理
 
-可设置页面最大最小宽度
+- 用户信息管理
+- 用户预约管理
 
-**2. VW 布局**
+#### 模块五 历史记录
 
-css 使用 vw 单位，文本大小可选择使用 px
+- 陪练数据统计
+- 用户数据统计
 
-使用 transform 以支持高清设备的边框 1px（包括圆角），使用 @mixin `./vw/scss/_border.scss`
+#### 模块六 数据统计
 
-可设置容器固定纵横比，不可设置页面最大最小宽度
-
-**3. REM + VW 布局**
-
-html 的 font-size 使用 vw 单位，css 使用 rem 单位，文本大小可选择使用 px
-
-使用 transform 以支持高清设备的边框 1px（包括圆角），使用 @mixin `./vw-rem/scss/_border.scss`
-
-可设置容器固定纵横比，可设置页面最大最小宽度
-
-## 使用
-
-1. yarn dev
-
-2. 业务代码中样式的调用方式可参考 `./rem/scss/rem.scss` 及 `./vw/scss/vw.scss` 及 `./vw-rem/scss/vw-rem.scss` 三个文件；可在 html 文件相应位置配置 `data-content-max` 属性来限制容器最大最小宽
+- 员工训练数据统计
