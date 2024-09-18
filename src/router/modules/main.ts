@@ -8,6 +8,7 @@ export const main: Array<RouteRecordRaw> = [
     meta: {
       title: '首页',
       icon: 'home-o',
+      hidden: false,
     },
   },
   {
@@ -17,6 +18,17 @@ export const main: Array<RouteRecordRaw> = [
     meta: {
       title: '我的',
       icon: 'user-o',
+      hidden: false,
+    },
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@/views/chat/index.vue'),
+    meta: {
+      title: 'AI陪练',
+      icon: 'user-o',
+      hidden: true,
     },
   },
 ];

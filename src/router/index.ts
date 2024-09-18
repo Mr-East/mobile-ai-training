@@ -11,6 +11,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('@/layout/index.vue'),
     meta: {
       title: '首页',
+      hidden: false,
     },
     children: [
       ...main,
