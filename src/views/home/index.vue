@@ -4,19 +4,19 @@
     <div class="title"><span>欢迎来到AI智能陪练~</span></div>
     <div class="begin">
       <van-button type="primary" size="normal" block @click="beginChat"
-        >开始问答</van-button
-      >
+        >开始问答
+      </van-button>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>    
+<script lang="ts" setup>
 import { useRouter } from "vue-router";
 const $router = useRouter();
 
 const beginChat = () => {
   $router.push("/chat");
-}
+};
 defineOptions({ name: "Home" });
 </script>
 
@@ -26,7 +26,7 @@ defineOptions({ name: "Home" });
 
   height: 100%;
 
-  .title{
+  .title {
     padding: 15px;
     text-align: center;
     font-size: 20px;
@@ -48,7 +48,6 @@ defineOptions({ name: "Home" });
     transform: translateY(50%);
     width: 100px;
     height: 50px;
-
   }
 }
 </style>

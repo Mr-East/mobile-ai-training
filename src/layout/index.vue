@@ -1,6 +1,6 @@
 <template>
   <van-sticky ref="stickyRef">
-    <van-nav-bar :title="$route.meta?.title">
+    <van-nav-bar :title="$route.meta?.title" >
       <template #left>
         <van-icon name="wap-nav" size="18" />
       </template>
@@ -31,9 +31,7 @@
 import { ref, nextTick } from "vue";
 import { Sticky, Tabbar } from "vant";
 import { main } from "@/router/modules/main";
-
 defineOptions({ name: "Layout" });
-
 const stickyRef = ref<InstanceType<typeof Sticky>>();
 const tabbarRef = ref<InstanceType<typeof Tabbar>>();
 const containerHeight = ref("");
@@ -46,10 +44,12 @@ nextTick(() => {
 </script>
 
 <style lang="scss">
+
 .container {
   --height: v-bind("containerHeight");
   --container-height: calc(100vh - var(--height));
 
+  background-color:#f7f8fa;
   height: calc(100vh - var(--height));
   overflow: auto;
 }

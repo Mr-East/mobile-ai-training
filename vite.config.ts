@@ -51,13 +51,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           `,
       }),
       // https://github.com/fi3ework/vite-plugin-checker
-      checker({
-        typescript: true,
-        vueTsc: true,
-        eslint: {
-          lintCommand: 'eslint "./src/**/*.{.vue,ts,tsx}"', // for example, lint .ts & .tsx
-        },
-      }),
+      // checker({
+      //   typescript: true,
+      //   vueTsc: true,
+      //   eslint: {
+      //     lintCommand: 'eslint "./src/**/*.{.vue,ts,tsx}"', // for example, lint .ts & .tsx
+      //   },
+      // }),
     ],
     css: {
       preprocessorOptions: {
@@ -88,11 +88,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       // },
     },
     server: {
-      port: 8888,
+      port: 8081,
       proxy: {
         '/api': {
           // 免费的在线REST API
-          target: 'http://jsonplaceholder.typicode.com',
+          target: 'http://127.0.0.1:8080',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
