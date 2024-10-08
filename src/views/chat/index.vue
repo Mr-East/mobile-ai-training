@@ -43,9 +43,15 @@
           class="input-field"
         />
         <van-button round type="primary" @click="sendMessage">发送</van-button>
+        <template v-if="!isStop">
+          <van-button round type="danger" @click="stopMessage">停止</van-button>
+        </template>
+        <template v-else>
+          <van-button loading type="danger" />
+        </template>
       </div>
-      <div v-else class="score" @click="toScore">
-      对话已结束，点击查看反馈和评价
+      <div  v-else class="score" @click="toScore">
+        对话已结束，点击查看反馈和评价
       </div>
     </div>
   </div>
@@ -55,7 +61,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { getAssetsFile } from "@/utils/getImg";
-import { useRoute,useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { showNotify } from "vant";
 const $router = useRouter();
 const route = useRoute();
@@ -65,7 +71,7 @@ const isLoading = ref(false); // 用于控制是否显示加载动画
 
 const userStore = useUserStore();
 const input = ref(""); // 用户输入内容
-
+const isStop = ref(false); // 是否停止发送消息
 const messages = ref<any>([]);
 let testIndex = 0;
 const testMes = [
@@ -79,8 +85,7 @@ const testMes = [
   }, // 用户回复
   {
     type: "ai",
-    content:
-      "重新做一份就能解决问题了吗？我已经等了很久了！你们这是在浪费我的时间！",
+    content: "重新做一份就能解决问题了吗？我已经等了很久了！你们这是在浪费我的时间！",
   }, // AI 消息
   {
     type: "user",
@@ -89,10 +94,18 @@ const testMes = [
   }, // 用户回复
   {
     type: "ai",
-    content:
-      "免单和代金券就够了吗？你们的服务质量让我非常失望，我要投诉你们！",
+    content: "免单和代金券就够了吗？你们的服务质量让我非常失望，我要投诉你们！",
   }, // AI 消息
-]
+  {
+    type: "user",
+    content:
+      "真的非常抱歉让您感到如此失望，我们非常重视您的反馈。我们会立即将您的情况反馈给经理，并对我们的服务和烹饪流程进行严格审查。同时，我们也会主动联系您，进一步了解如何能够弥补您的不满。感谢您给我们提出改进的机会。",
+  }, // 用户回复
+  {
+    type: "ai",
+    content: "希望你们能真正改善，不要让其他顾客也有同样的糟糕体验。",
+  }, // AI 消息
+];
 const messagesArray = ref([
   [
     {
@@ -190,24 +203,28 @@ const messagesArray = ref([
     },
   ],
 ]);
-const isHistoryFun = () =>{
-  if(route.query.isHistory == '1'){
-    isHistory.value = true
-  }else{
-    isHistory.value = false
+const isHistoryFun = () => {
+  if (route.query.isHistory == "1") {
+    isHistory.value = true;
+  } else {
+    isHistory.value = false;
   }
-
-  
-  }
-const toScore  = ()=>{
+};
+const toScore = () => {
   $router.push({
-    path:'/score',
-    query:{
-      scoreId:route.query.index,
+    path: "/score",
+    query: {
+      scoreId: route.query.index || 0,
     },
-  })
-}
-
+  });
+};
+const stopMessage = () => {
+  isStop.value = true;
+  setTimeout(() => {
+    isStop.value = false;
+    isHistory.value = true;
+  }, 2000);
+};
 const getHistory = () => {
   const index = parseInt(routeIndex.value); // 将 index 转为数值
   if (!isNaN(index) && index >= 0 && index < messagesArray.value.length) {
@@ -215,7 +232,7 @@ const getHistory = () => {
   } else {
     messages.value = []; // 如果没有对应的 index，展示一个空的消息列表或默认值
   }
-  isHistoryFun()
+  isHistoryFun();
 };
 
 // 发送消息的逻辑
@@ -229,15 +246,19 @@ const sendMessage = () => {
 
     // 显示加载动画
     isLoading.value = true;
-    
+
     // 模拟 AI 回复
     setTimeout(() => {
       messages.value.push({ type: "ai", content: testMes[testIndex].content });
-      testIndex = testIndex + 2
+      testIndex = testIndex + 2;
       // 回复后隐藏加载动画
       isLoading.value = false;
+      if (testIndex > testMes.length) {
+        setTimeout(() => {
+          isHistory.value = true;
+        }, 2000);
+      }
     }, 2000); // 假设 AI 回复需要 2 秒
-    
   } else {
     showNotify({
       type: "warning",
@@ -260,9 +281,15 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.score{
-  height: 25px;
+.score {
+  height: 40px;
   text-align: center;
+  background-color: #fff;
+  border-top: 1px solid #ebebeb;
+  cursor: pointer;
+  &:hover {
+    color: #1989fa;
+  }
 }
 .user-wrapper {
   width: 100%;
@@ -347,4 +374,15 @@ onMounted(() => {
 .loading-message van-loading {
   margin-right: 8px;
 }
+
+.van-button {
+  height: 40px;
+  margin: 0px 5px;
+}
+.van-button--loading {
+  border-radius: 5px;
+}
+
+ 
+
 </style>

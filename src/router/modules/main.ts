@@ -65,6 +65,16 @@ export const admin: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: '/stat',
+    name: 'stat',
+    component: () => import('@/views/stat/index.vue'),
+    meta: {
+      title: '数据统计',
+      icon: 'chart-trending-o',
+      hidden: false,
+    },
+  },
+  {
     path: '/user',
     name: 'user',
     component: () => import('@/views/user/index.vue'),

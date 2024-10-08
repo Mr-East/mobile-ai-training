@@ -13,6 +13,7 @@
           <p class="username">{{ userStore.userInfo.username }}</p>
         </div>
       </van-cell-group>
+      <div v-if="!userStore.userInfo.isAdmin" id="scoreChart" style="width: 100%; height: 300px"></div>
       <div class="logout">
         <van-button type="primary" size="normal" block @click="onLogout"
           >退出登录</van-button
@@ -45,11 +46,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,onMounted, nextTick } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { getAssetsFile } from "@/utils/getImg";
 import { showNotify } from "vant";
 import {useRouter} from 'vue-router'
+import * as echarts from "echarts";
 const userStore = useUserStore();
 const $router = useRouter()
 
@@ -67,6 +69,7 @@ const onLogin = () => {
       type: "success",
       message: "登录成功",
     })
+     nextTick(() => {initChart()})
   } else {
     showNotify({
       type: "danger",
@@ -83,6 +86,56 @@ const onLogout = () => {
     message: `退出登录成功`,
   });
 };
+
+const scores = ref({
+  listen: 7,
+  apology: 6,
+  solve: 8,
+  thank: 9,
+  average: 7,
+})
+const initChart = () => {
+  const chartDom = document.getElementById("scoreChart")!;
+  const myChart = echarts.init(chartDom);
+  const option = {
+    title: {
+      text: "平均评分",
+      left: "top",
+    },
+    radar: {
+      indicator: [
+        { name: "倾听", max: 10 },
+        { name: "道歉", max: 10 },
+        { name: "解决", max: 10 },
+        { name: "感谢", max: 10 },
+        { name: "综合", max: 10 },
+      ],
+    },
+    series: [
+      {
+        type: "radar",
+        data: [
+          {
+            value: [
+              scores.value.listen,
+              scores.value.apology,
+              scores.value.solve,
+              scores.value.thank,
+              scores.value.average,
+            ],
+            name: "评分",
+          },
+        ],
+      },
+    ],
+  };
+  myChart.setOption(option);
+};
+
+// 初始化图表
+onMounted(() => {
+  // initChart()
+});
 </script>
 
 <style scoped lang="scss">

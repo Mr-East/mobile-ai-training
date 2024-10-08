@@ -110,8 +110,10 @@ const showPicker = ref(false);
 // 用户列表数据
 const users = ref([
   { name: "admin", role: "管理员" },
+  { name: "张三", role: "员工" },
   { name: "李四", role: "员工" },
   { name: "王五", role: "员工" },
+  { name: "赵六", role: "员工" },
 ]);
 
 const columns = [
