@@ -4,7 +4,26 @@
       <div class="robot-body"></div>
       <div class="robot-bottom"></div>
     </div>
-    <div class="title"><span>请选择场景</span></div>
+    <div class="title">
+      <div class="sesson-title" style="margin-bottom: 20px;">
+        <van-icon name="setting-o" style="margin-right: 10px;"/>请选择场景
+        </div>
+      <van-field
+        v-model="selectedSession"
+        is-link
+        readonly
+        label="场景"
+        placeholder="选择场景"
+        @click="showPicker = true"
+      />
+      <van-popup v-model:show="showPicker" round position="bottom">
+        <van-picker
+          :columns="columns"
+          @cancel="showPicker = false"
+          @confirm="onConfirm"
+        />
+      </van-popup>
+    </div>
     <div class="begin">
       <van-button type="primary" size="normal" block @click="beginChat"
         >开始问答
@@ -16,23 +35,33 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/modules/user";
+import { useSessionStore } from "@/store/modules/session";
 import { showNotify } from "vant";
+import { ref } from "vue";
 const userStore = useUserStore();
+const sessionStore = useSessionStore();
 const $router = useRouter();
+const showPicker = ref(false);
+const columns = ref(sessionStore.sessions.map((item) => {return {text:item.name, value:item.name}}));
+
+const selectedSession = ref("");
+const onConfirm = ({selectedOptions}) => {
+  selectedSession.value = selectedOptions[0].text;
+  showPicker.value = false;
+  
+}
 
 const beginChat = () => {
-  if(userStore.userInfo.isLogin){
+  if (userStore.userInfo.isLogin) {
     $router.push("/chat");
-  } else{
+  } else {
     showNotify({
       type: "warning",
       message: "请先登录",
     });
-  
-    $router.push("/user"); 
-    
+
+    $router.push("/user");
   }
-  
 };
 defineOptions({ name: "Home" });
 </script>
@@ -47,6 +76,7 @@ defineOptions({ name: "Home" });
     padding: 15px;
     text-align: center;
     font-size: 20px;
+
   }
   .bg {
     position: absolute;

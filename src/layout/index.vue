@@ -47,7 +47,10 @@
     </div>
 
     <div class="history">
-      <div class="title">陪练历史记录</div>
+      <div class="title">
+        <van-icon name="tosend" />
+      陪练历史记录
+      </div>
       <van-sidebar-item
         v-for="(item, index) in sidebarItems"
         :key="item"
@@ -105,6 +108,8 @@ const handleSidebarItemClick = (item: string, index: number) => {
     path: "/chat",
     query: {
       index: index,
+      isHistory: 1,//0表示新对话，1表示历史对话
+      rankIndex:index,//评分索引
     },
   });
   toggleSidebar(); // 选择后自动关闭侧边栏
@@ -162,7 +167,7 @@ nextTick(() => {
     margin-top: 25px;
     .title {
       font-weight: bold;
-      margin-left: 15px;
+      // margin-left: 15px;
       font-size: 25px;
       position: relative;
       // &::before {

@@ -26,17 +26,27 @@
           <div class="message-content">{{ message.content }}</div>
         </div>
       </div>
+      <!-- 如果正在等待 AI 回复，显示加载动画 -->
+      <div v-if="isLoading" class="loading-message">
+        <van-loading size="24px" />
+        <span>AI 正在回复...</span>
+      </div>
     </div>
 
     <!-- 输入框和发送按钮 -->
-    <div class="input-bar">
-      <van-field
-        v-model="input"
-        placeholder="输入你的消息..."
-        clearable
-        class="input-field"
-      />
-      <van-button round type="primary" @click="sendMessage">发送</van-button>
+    <div class="footer">
+      <div v-if="!isHistory" class="input-bar">
+        <van-field
+          v-model="input"
+          placeholder="输入你的消息..."
+          clearable
+          class="input-field"
+        />
+        <van-button round type="primary" @click="sendMessage">发送</van-button>
+      </div>
+      <div v-else class="score" @click="toScore">
+      对话已结束，点击查看反馈和评价
+      </div>
     </div>
   </div>
 </template>
@@ -45,11 +55,13 @@
 import { ref, onMounted, watch } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { getAssetsFile } from "@/utils/getImg";
-import { useRoute } from "vue-router";
-
+import { useRoute,useRouter } from "vue-router";
+import { showNotify } from "vant";
+const $router = useRouter();
 const route = useRoute();
-
+const isHistory = ref(false); // 是否是历史对话
 const routeIndex: any = ref(route.query.index); // 获取传递的 index 参数
+const isLoading = ref(false); // 用于控制是否显示加载动画
 
 const userStore = useUserStore();
 const input = ref(""); // 用户输入内容
@@ -152,6 +164,23 @@ const messagesArray = ref([
     },
   ],
 ]);
+const isHistoryFun = () =>{
+  if(route.query.isHistory == '1'){
+    isHistory.value = true
+  }else{
+    isHistory.value = false
+  }
+
+  
+  }
+const toScore  = ()=>{
+  $router.push({
+    path:'/score',
+    query:{
+      scoreId:route.query.index,
+    },
+  })
+}
 
 const getHistory = () => {
   const index = parseInt(routeIndex.value); // 将 index 转为数值
@@ -160,6 +189,7 @@ const getHistory = () => {
   } else {
     messages.value = []; // 如果没有对应的 index，展示一个空的消息列表或默认值
   }
+  isHistoryFun()
 };
 
 // 发送消息的逻辑
@@ -171,10 +201,21 @@ const sendMessage = () => {
     // 清空输入框
     input.value = "";
 
+    // 显示加载动画
+    isLoading.value = true;
+
     // 模拟 AI 回复
     setTimeout(() => {
       messages.value.push({ type: "ai", content: "这是 AI 的回复" });
-    }, 1000);
+
+      // 回复后隐藏加载动画
+      isLoading.value = false;
+    }, 2000); // 假设 AI 回复需要 2 秒
+  } else {
+    showNotify({
+      type: "warning",
+      message: "请输入内容",
+    });
   }
 };
 
@@ -192,12 +233,17 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.score{
+  height: 25px;
+  text-align: center;
+}
 .user-wrapper {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   text-align: right;
 }
+
 .chat-container {
   display: flex;
   flex-direction: column;
@@ -218,26 +264,33 @@ onMounted(() => {
 }
 
 .user-message {
-  justify-content: flex-end;
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   .message-content {
-    margin-right: 55px;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 50%;
+    margin-right: 60px;
+    text-align: left;
   }
 }
 
 .ai-message {
   justify-content: flex-start;
-}
-
-.message-content {
-  font-size: 16px;
-  line-height: 24px;
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  max-width: 60%;
-  margin-left: 50px;
-  text-align: left;
+  .message-content {
+    font-size: 16px;
+    line-height: 24px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 50%;
+    margin-left: 50px;
+    text-align: left;
+  }
 }
 
 .avatar {
@@ -255,5 +308,16 @@ onMounted(() => {
 .input-field {
   flex: 1;
   margin-right: 10px;
+}
+
+.loading-message {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.loading-message van-loading {
+  margin-right: 8px;
 }
 </style>

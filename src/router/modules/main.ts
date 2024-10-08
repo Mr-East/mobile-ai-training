@@ -31,6 +31,15 @@ export const main: Array<RouteRecordRaw> = [
       hidden: true,
     },
   },
+  {
+    path: '/score ',
+    name: 'score',
+    component: () => import('@/views/score/index.vue'),
+    meta: {
+      title: '评分反馈',
+      hidden: true,
+    }
+  }
 ];
 
 export const admin: Array<RouteRecordRaw> = [
@@ -65,5 +74,13 @@ export const admin: Array<RouteRecordRaw> = [
       hidden: false,
     },
   },
-  
+  {
+    path: '/score',
+    name: 'score',
+    component: () => import('@/views/score/index.vue'),
+    meta: {
+      title: '评分反馈',
+      hidden: true,
+    }
+  }
 ];
