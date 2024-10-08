@@ -42,18 +42,125 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { getAssetsFile } from "@/utils/getImg";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const routeIndex: any = ref(route.query.index); // 获取传递的 index 参数
+
 const userStore = useUserStore();
 const input = ref(""); // 用户输入内容
-const messages = ref([
-  { type: "ai", content: "你们的特色炒饭，我刚吃了一口就发现了虫卵，太恶心了!你们这是想害死顾客吗?" }, // AI 消息
-  { type: "user", content: "真的吗?这样的话这边我们给您换一盘，并且这单免单了，可以吗" }, // AI 消息
-  { type: "ai", content: "换一盘?免单?你以为这样就能解决问题吗?我现在很生气，我要你们给我一个解释!这件事到底是怎么发生的?你们的卫生条件到底有没有保障?" }, // AI 消息
-  { type: "user", content: "您可以直接看到我们的厨房环境的，可能是外面飞进来的虫子，这个我们实在难以避免，但是我们还是给您200元的优惠券" }, // AI 消息
-  { type: "ai", content: " 什么?外面飞进来的虫子?这听起来完全就是推卸责任!200元优惠券就能解决问题吗?你们的卫生标准太让人失望了，我要见你们的经理，马上!" }, // AI 消息
+
+const messages = ref<any>([]);
+const messagesArray = ref([
+  [
+    {
+      type: "ai",
+      content: "你们的特色炒饭，我刚吃了一口就发现了虫卵，太恶心了!你们这是想害死顾客吗?",
+    }, // AI 消息
+    {
+      type: "user",
+      content: "真的吗?这样的话这边我们给您换一盘，并且这单免单了，可以吗",
+    }, // AI 消息
+    {
+      type: "ai",
+      content:
+        "换一盘?免单?你以为这样就能解决问题吗?我现在很生气，我要你们给我一个解释!这件事到底是怎么发生的?你们的卫生条件到底有没有保障?",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "您可以直接看到我们的厨房环境的，可能是外面飞进来的虫子，这个我们实在难以避免，但是我们还是给您200元的优惠券",
+    }, // AI 消息
+    {
+      type: "ai",
+      content:
+        " 什么?外面飞进来的虫子?这听起来完全就是推卸责任!200元优惠券就能解决问题吗?你们的卫生标准太让人失望了，我要见你们的经理，马上!",
+    }, // AI 消息
+  ],
+  [
+    {
+      type: "ai",
+      content: "你们家的牛排上竟然有头发，简直太恶心了！你们的卫生标准到底有没有？",
+    },
+    {
+      type: "user",
+      content: "真的很抱歉，我们会重新为您准备一份干净的牛排，同时为您免单，这样可以吗？",
+    },
+    {
+      type: "ai",
+      content:
+        "免单就可以解决问题吗？我现在已经没有胃口了！我要投诉你们店，我要你们彻底检查卫生条件！",
+    },
+    {
+      type: "user",
+      content:
+        "我们非常理解您的心情，我们会立即启动内部调查，确保类似情况不再发生，同时为您提供300元的代金券以表歉意。",
+    },
+    {
+      type: "ai",
+      content: "你们最好赶紧检查，不然我会在网上公开你们的卫生问题，简直让人无法接受！",
+    },
+  ],
+  [
+    {
+      type: "ai",
+      content: "我在汤里发现了一个塑料片，这可是吃饭的地方，怎么会有这样的东西？",
+    },
+    {
+      type: "user",
+      content:
+        "非常抱歉，可能是在准备过程中不小心混入了，我们可以马上给您换一份新的汤，您看可以吗？",
+    },
+    {
+      type: "ai",
+      content:
+        "换一份新的就能解决问题吗？这事太恶劣了！我要你们解释到底怎么会出现这种情况！",
+    },
+    {
+      type: "user",
+      content:
+        "我们已经紧急通知了厨房团队，正在进行全面检查，同时为您这餐免单，并额外提供100元的优惠券，作为我们的诚意。",
+    },
+    {
+      type: "ai",
+      content: "你们的做法让我很失望，我要求见经理，你们给我一个正式的回应！",
+    },
+  ],
+  [
+    { type: "ai", content: "你们的烤鸭外焦里生，根本不能吃！你们的厨师是怎么做的？" },
+    {
+      type: "user",
+      content:
+        "真的很抱歉，这次的烤鸭可能是时间不够导致的，我们可以为您重新做一份并且这顿饭免费，您觉得怎么样？",
+    },
+    {
+      type: "ai",
+      content: "重新做一份？我等了这么久，完全失去了食欲！你们这次真的是让我太失望了。",
+    },
+    {
+      type: "user",
+      content:
+        "我们非常抱歉，为了表示我们的歉意，我们还将为您提供500元的优惠券，您看如何？",
+    },
+    {
+      type: "ai",
+      content: "500元优惠券能挽回我的时间和体验吗？我会把这件事告诉所有朋友，太差劲了！",
+    },
+  ],
 ]);
+
+const getHistory = () => {
+  const index = parseInt(routeIndex.value); // 将 index 转为数值
+  if (!isNaN(index) && index >= 0 && index < messagesArray.value.length) {
+    messages.value = messagesArray.value[index];
+  } else {
+    messages.value = []; // 如果没有对应的 index，展示一个空的消息列表或默认值
+  }
+};
 
 // 发送消息的逻辑
 const sendMessage = () => {
@@ -70,15 +177,26 @@ const sendMessage = () => {
     }, 1000);
   }
 };
+
+watch(
+  () => route.query.index,
+  (newIndex) => {
+    routeIndex.value = newIndex; // 更新 routeIndex 的值
+    getHistory(); // 重新获取历史记录
+  }
+);
+
+onMounted(() => {
+  getHistory();
+});
 </script>
 
 <style scoped lang="scss">
-.user-wrapper{
+.user-wrapper {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   text-align: right;
-
 }
 .chat-container {
   display: flex;
@@ -102,6 +220,9 @@ const sendMessage = () => {
 .user-message {
   justify-content: flex-end;
   text-align: right;
+  .message-content {
+    margin-right: 55px;
+  }
 }
 
 .ai-message {
@@ -115,7 +236,7 @@ const sendMessage = () => {
   padding: 10px;
   border-radius: 8px;
   max-width: 60%;
-  margin-left:50px;
+  margin-left: 50px;
   text-align: left;
 }
 

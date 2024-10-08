@@ -1,6 +1,6 @@
 <template>
   <div class="user-container">
-    <div v-if="isLoggedIn" class="logout_wrapper">
+    <div v-if="userStore.userInfo.isLogin" class="logout_wrapper">
       <van-cell-group>
         <div class="user-info">
           <van-image
@@ -10,7 +10,7 @@
             :src="getAssetsFile(userStore.userInfo.avatar)"
             fit="cover"
           />
-          <p class="username">{{ username }}</p>
+          <p class="username">{{ userStore.userInfo.username }}</p>
         </div>
       </van-cell-group>
       <div class="logout">
@@ -32,13 +32,12 @@
             placeholder="请输入密码"
           />
         </van-cell-group>
-        <div class="login-bottom">
-          <div class="login-button">
-            <van-button type="primary" block @click="onLogin" size="normal"
-              >登录</van-button
-            >
-            <div class="register">没有账号?立即注册</div>
-          </div>
+
+        <div class="login-button">
+          <van-button type="primary" block @click="onLogin" size="normal"
+            >登录
+            </van-button>
+          <div class="register">没有账号?立即注册</div>
         </div>
       </div>
     </div>
@@ -49,9 +48,10 @@
 import { ref } from "vue";
 import { useUserStore } from "@/store/modules/user";
 import { getAssetsFile } from "@/utils/getImg";
+import { showNotify } from "vant";
+import {useRouter} from 'vue-router'
 const userStore = useUserStore();
-const isLoggedIn = ref(false); // 判断是否登录
-const username = ref("张三");
+const $router = useRouter()
 
 // 登录界面输入的用户名和密码
 const loginUsername = ref("");
@@ -60,16 +60,28 @@ const password = ref("");
 const onLogin = () => {
   // 这里可以放置实际的登录逻辑，比如调用 API
   if (loginUsername.value && password.value) {
-    isLoggedIn.value = true;
-    username.value = loginUsername.value; // 设置登录后的用户名
-    console.log("登录成功");
+    userStore.userInfo.isLogin = true;
+    if(loginUsername.value === "admin" && password.value === "111") { userStore.userInfo.isAdmin = true; }
+    userStore.userInfo.username = loginUsername.value; // 设置登录后的用户名
+    showNotify({
+      type: "success",
+      message: "登录成功",
+    })
   } else {
-    console.log("请输入用户名和密码");
+    showNotify({
+      type: "danger",
+      message: "用户名或密码不能为空",
+    })
   }
 };
 
 const onLogout = () => {
-  isLoggedIn.value = false; // 执行登出逻辑
+  userStore.userLogOut();
+  $router.push("/user");
+  showNotify({
+    type: "success",
+    message: `退出登录成功`,
+  });
 };
 </script>
 
@@ -140,11 +152,22 @@ const onLogout = () => {
   margin: 0 auto;
   z-index: 1;
 }
+
 .login-button {
-  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
   .van-button {
-    width: 70%;
-    margin: 0 auto;
+    height: 25px;
+    width: 40%;
+    border-radius: 25px;
+  }
+  .register {
+    line-height: 25px;
+    font-size: 16px;
+    cursor: pointer;
+
+    color: #1989fa;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 import { App } from 'vue';
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { createRouterGuards } from './routerGuards';
-import { main } from './modules/main';
+import { main,admin } from './modules/main';
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -15,6 +15,7 @@ export const routes: Array<RouteRecordRaw> = [
     },
     children: [
       ...main,
+      ...admin,
       {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',

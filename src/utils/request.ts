@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
+import { showNotify } from 'vant';
 // import useUserStore from '@/store/modules/user'
 //创建axios实例
 let request = axios.create({
@@ -41,8 +42,8 @@ request.interceptors.response.use(
       default:
         msg = '无网络'
     }
-    ElMessage({
-      type: 'error',
+    showNotify({
+      type: 'danger',
       message: msg,
     })
     return Promise.reject(error)
