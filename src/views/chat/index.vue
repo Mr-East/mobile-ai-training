@@ -109,6 +109,10 @@ const testMes = [
 const messagesArray = ref([
   [
     {
+      type: "user",
+      content: "你好，请问需要什么帮助吗",
+    }, // AI 消息
+    {
       type: "ai",
       content: "你们的特色炒饭，我刚吃了一口就发现了虫卵，太恶心了!你们这是想害死顾客吗?",
     }, // AI 消息
@@ -134,6 +138,10 @@ const messagesArray = ref([
   ],
   [
     {
+      type: "user",
+      content: "你好，请问需要什么帮助吗",
+    }, // AI 消息
+    {
       type: "ai",
       content: "你们家的牛排上竟然有头发，简直太恶心了！你们的卫生标准到底有没有？",
     },
@@ -157,6 +165,10 @@ const messagesArray = ref([
     },
   ],
   [
+    {
+      type: "user",
+      content: "你好，请问需要什么帮助吗",
+    }, // AI 消息
     {
       type: "ai",
       content: "我在汤里发现了一个塑料片，这可是吃饭的地方，怎么会有这样的东西？",

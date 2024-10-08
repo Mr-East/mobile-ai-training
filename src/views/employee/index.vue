@@ -57,10 +57,18 @@
       </div>
 
       <div v-if="activeTab === 2">
+        <div class="guant-title">
+          <span>场景列表</span>
+          <van-button type="primary" @click="openAddSessionPopup">新增场景</van-button>
+        </div>
         <van-cell-group>
-          <van-cell title="场景1" label="描述：场景1的描述" />
-          <van-cell title="场景2" label="描述：场景2的描述" />
-          <van-cell title="场景3" label="描述：场景3的描述" />
+          <van-cell
+            v-for="(item, index) in sessionStore.sessions"
+            :title="item.name"
+            :label="`描述：${item.dec}`"
+            :key="index"
+          />
+
         </van-cell-group>
       </div>
     </div>
@@ -97,14 +105,23 @@
         <van-button type="primary" block @click="addNewUser">添加用户</van-button>
       </div>
     </van-popup>
+
+    <van-popup v-model:show="showSessionPopup" round position="bottom">
+      <div style="padding: 20px">
+      <van-field v-model="newSession.name" label="场景名称" placeholder="请输入场景名称" />
+      <van-field v-model="newSession.dec" label="场景描述" placeholder="请输入场景描述" />
+      <van-button type="primary" block @click="addNewSession">添加场景</van-button>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { showDialog } from "vant";
-
+import { showDialog, showNotify } from "vant";
+import { useSessionStore } from "@/store/modules/session";
 // 当前激活的侧边栏选项索引
+const sessionStore = useSessionStore();
 const activeTab = ref(0);
 const showPicker = ref(false);
 // 用户列表数据
@@ -115,7 +132,24 @@ const users = ref([
   { name: "王五", role: "员工" },
   { name: "赵六", role: "员工" },
 ]);
+const showSessionPopup = ref(false);
+const newSession = ref({ name: "", dec: "" });
+const openAddSessionPopup =()=>{
+  showSessionPopup.value = true;
 
+}
+const addNewSession = () => {
+  if (newSession.value.name && newSession.value.dec) {
+    sessionStore.addSession(newSession.value);
+    showSessionPopup.value = false;
+  } else {
+    showNotify({
+      type:"warning",
+      message: "请输入场景名称和描述",
+    });
+  }
+  
+}
 const columns = [
   {
     text: "管理员",
@@ -209,12 +243,12 @@ const assignTask = (user: { name: string }) => {
   font-size: 16px;
   display: flex;
   justify-content: space-between;
-  span{
+  span {
     display: flex;
     align-items: center;
   }
-  .van-button{
-height: 25px;
+  .van-button {
+    height: 25px;
   }
 }
 .employee-management {
