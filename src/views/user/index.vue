@@ -21,7 +21,7 @@
     </div>
     <div v-else class="login">
       <div class="login-bg"></div>
-      <div class="login-title">心肴灵引</div>
+      <div class="login-title">智训</div>
       <div class="login_wrapper">
         <van-cell-group>
           <van-field v-model="loginUsername" label="用户名" placeholder="请输入用户名" />

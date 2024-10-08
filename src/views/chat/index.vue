@@ -67,6 +67,32 @@ const userStore = useUserStore();
 const input = ref(""); // 用户输入内容
 
 const messages = ref<any>([]);
+let testIndex = 0;
+const testMes = [
+  {
+    type: "ai",
+    content: "你们的牛排太生了，根本没法吃！你们的厨师是不是不专业？",
+  }, // AI 消息
+  {
+    type: "user",
+    content: "真的很抱歉，可能是烹饪时间不够，我们可以给您重新做一份，您看可以吗？",
+  }, // 用户回复
+  {
+    type: "ai",
+    content:
+      "重新做一份就能解决问题了吗？我已经等了很久了！你们这是在浪费我的时间！",
+  }, // AI 消息
+  {
+    type: "user",
+    content:
+      "我们非常理解您的感受，为了弥补您的等待，我们这顿饭将为您免单，并且给您300元的代金券作为补偿。",
+  }, // 用户回复
+  {
+    type: "ai",
+    content:
+      "免单和代金券就够了吗？你们的服务质量让我非常失望，我要投诉你们！",
+  }, // AI 消息
+]
 const messagesArray = ref([
   [
     {
@@ -203,14 +229,15 @@ const sendMessage = () => {
 
     // 显示加载动画
     isLoading.value = true;
-
+    
     // 模拟 AI 回复
     setTimeout(() => {
-      messages.value.push({ type: "ai", content: "这是 AI 的回复" });
-
+      messages.value.push({ type: "ai", content: testMes[testIndex].content });
+      testIndex = testIndex + 2
       // 回复后隐藏加载动画
       isLoading.value = false;
     }, 2000); // 假设 AI 回复需要 2 秒
+    
   } else {
     showNotify({
       type: "warning",
