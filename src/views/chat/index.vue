@@ -79,38 +79,96 @@ const userStore = useUserStore();
 const input = ref(""); // 用户输入内容
 const isStop = ref(false); // 是否停止发送消息
 const messages = ref<any>([]);
+let msgIndex = ref(Number(route.query.testIndex) || 0);
+watch(() => route.query.testIndex,(newValue) => {
+
+  msgIndex.value = Number(newValue);
+})
 let testIndex = 0;
 const testMes = [
-  {
-    type: "ai",
-    content: "你们的牛排太生了，根本没法吃！你们的厨师是不是不专业？",
-  }, // AI 消息
-  {
-    type: "user",
-    content: "真的很抱歉，可能是烹饪时间不够，我们可以给您重新做一份，您看可以吗？",
-  }, // 用户回复
-  {
-    type: "ai",
-    content: "重新做一份就能解决问题了吗？我已经等了很久了！你们这是在浪费我的时间！",
-  }, // AI 消息
-  {
-    type: "user",
-    content:
-      "我们非常理解您的感受，为了弥补您的等待，我们这顿饭将为您免单，并且给您300元的代金券作为补偿。",
-  }, // 用户回复
-  {
-    type: "ai",
-    content: "免单和代金券就够了吗？你们的服务质量让我非常失望，我要投诉你们！",
-  }, // AI 消息
-  {
-    type: "user",
-    content:
-      "真的非常抱歉让您感到如此失望，我们非常重视您的反馈。我们会立即将您的情况反馈给经理，并对我们的服务和烹饪流程进行严格审查。同时，我们也会主动联系您，进一步了解如何能够弥补您的不满。感谢您给我们提出改进的机会。",
-  }, // 用户回复
-  {
-    type: "ai",
-    content: "希望你们能真正改善，不要让其他顾客也有同样的糟糕体验。",
-  }, // AI 消息
+  [
+    {
+      type: "ai",
+      content:
+        "我在你们的炒饭里吃出了一只虫卵，这太恶心了！你们餐厅的卫生标准到底在哪里？",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "真的非常抱歉让您遇到这样的情况，我们非常重视卫生标准。我们会立刻撤下这道菜并为您重新准备一份干净的炒饭。这顿饭将为您免单，同时我们提供300元的代金券作为补偿。您觉得这样可以吗？",
+    }, // 用户回复
+    {
+      type: "ai",
+      content:
+        "免单和代金券就能解决问题吗？我现在非常生气！虫卵这种事情完全无法接受，我怀疑你们的卫生状况！",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "我们非常理解您的愤怒，确实这样的事情是不该发生的。我们已经通知了厨房，正在全面检查卫生情况，确保类似问题不会再次发生。我们也愿意邀请您参观我们的厨房设施，亲眼看看我们的卫生措施。我们会非常认真对待您的反馈，并立即展开调查。",
+    }, // 用户回复
+    {
+      type: "ai",
+      content:
+        "参观厨房？你觉得我现在还有心情吗？如果我去卫生部门投诉，你们可就不是免单和代金券能解决的了。",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "您的投诉我们非常重视，也完全理解您的担忧。我们愿意承担任何进一步的责任，并将积极配合卫生部门的检查。您提出的任何意见，我们都会认真对待并作出改进。同时，我们想为您提供一份VIP客户体验卡，确保您未来在我们的餐厅享受到更高品质的服务。再次感谢您给我们改进的机会。",
+    }, // 用户回复
+    {
+      type: "ai",
+      content:
+        "希望你们这次的改善是认真的，我暂时不会投诉，但你们最好真的做出改变，否则我一定会采取进一步行动。",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "感谢您的理解和宽容。我们保证会采取所有必要的改进措施，并持续提升我们的卫生标准。如果您有任何进一步的意见或需求，随时可以联系我们，我们会第一时间回应。再次对今天的体验表示诚挚的歉意。",
+    }, // 用户回复
+  ],
+  [
+    {
+      type: "ai",
+      content: "我刚刚在你们餐厅的过道上摔了一跤，地面滑得要命！你们这是怎么回事？",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "非常抱歉让您受到这样的惊吓，可能是清洁后地面湿滑导致的。我们会立即安排人员查看并处理问题区域，确保安全。请问您是否需要医疗帮助？我们可以立即为您联系医护人员。",
+    }, // 用户回复
+    {
+      type: "ai",
+      content:
+        "暂时不需要医护人员，但你们怎么能让顾客走在这么危险的地面上？你们的安全措施太不到位了！",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "我们深感抱歉，安全问题是我们工作的重点。我们会立即加强地面防滑措施，并检查所有区域的安全性。为了表达我们的歉意，今天的餐费我们将免单，另外我们愿意提供500元的代金券补偿您受到的影响。再次抱歉让您有如此糟糕的经历。",
+    }, // 用户回复
+    {
+      type: "ai",
+      content:
+        "免单和代金券就够了吗？如果我摔得严重一点，你们还打算这么轻描淡写地处理吗？这次真的是让我对你们餐厅彻底失望了！",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "非常理解您的愤怒，您受的委屈我们绝不忽视。我们已经立即启动了内部安全流程改进方案，确保每一位顾客的安全。为了进一步表明我们的诚意，我们将为您提供VIP客户卡，以保证未来为您提供更优质的服务。如果您对这次事件有任何进一步的建议或要求，我们随时愿意倾听。",
+    }, // 用户回复
+    {
+      type: "ai",
+      content:
+        "VIP客户卡？你们的服务倒是体贴，不过我不想再有类似经历。我会观察你们的改进，如果下次再有问题，我绝不会轻易放过！",
+    }, // AI 消息
+    {
+      type: "user",
+      content:
+        "非常感谢您对我们的宽容和理解，我们会将您的反馈作为未来改进的动力。我们承诺所有顾客的安全和体验都是我们的第一要务。期待下次您能见证我们的改变，再次对今天的经历表示深深的歉意。",
+    }, // 用户回复
+  ],
 ];
 const messagesArray = ref([
   [
@@ -232,7 +290,7 @@ const toScore = () => {
   $router.push({
     path: "/score",
     query: {
-      scoreId: route.query.index || 0,
+      scoreId: route.query.index || route.query.testIndex|| 0,
     },
   });
 };
@@ -256,6 +314,9 @@ const getHistory = () => {
 // 发送消息的逻辑
 const sendMessage = () => {
   if (input.value.trim()) {
+
+    console.log(msgIndex.value);
+    
     // 将用户的消息添加到消息列表
     messages.value.push({ type: "user", content: input.value });
 
@@ -267,7 +328,10 @@ const sendMessage = () => {
 
     // 模拟 AI 回复
     setTimeout(() => {
-      messages.value.push({ type: "ai", content: testMes[testIndex].content });
+      messages.value.push({
+        type: "ai",
+        content: testMes[msgIndex.value][testIndex].content,
+      });
       testIndex = testIndex + 2;
       // 回复后隐藏加载动画
       isLoading.value = false;
@@ -296,6 +360,20 @@ watch(
 onMounted(() => {
   getHistory();
 });
+
+import { onBeforeRouteLeave } from "vue-router";
+
+// 当离开这个页面时进行清理
+onBeforeRouteLeave((to, from, next) => {
+  // 这里可以执行页面离开时的销毁或清理逻辑
+
+  // 可以执行一些必要的清理操作，比如重置变量、停止监听等
+  testIndex = 0; // 清空输入框
+  messages.value = []; // 清空消息
+  msgIndex.value  =0
+  next(); // 确保路由可以正常跳转
+});
+
 const toggleVoiceInput = () => {
   if (isListening.value) {
     stopListening();

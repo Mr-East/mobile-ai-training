@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts" setup>
+import { watch } from 'vue'
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/modules/user";
 import { useSessionStore } from "@/store/modules/session";
@@ -42,18 +43,36 @@ const userStore = useUserStore();
 const sessionStore = useSessionStore();
 const $router = useRouter();
 const showPicker = ref(false);
-const columns = ref(sessionStore.sessions.map((item) => {return {text:item.name, value:item.name}}));
+const columns = ref(sessionStore.sessions.map((item) => ({ text: item.name, value: item.name })));
+
+watch(
+  () => sessionStore.sessions, // 确保 watch 的第一个参数是一个函数，返回被监听的值
+  (newValue) => {
+    columns.value = newValue.map((item) => ({ text: item.name, value: item.name }));
+  }
+);
 
 const selectedSession = ref("");
-const onConfirm = ({selectedOptions}) => {
+const selectedIndex = ref(0)
+const onConfirm = ({selectedOptions,selectedIndexes}) => {
+  
   selectedSession.value = selectedOptions[0].text;
+  selectedIndex.value = selectedIndexes[0];
+  console.log(selectedIndex.value);
+  
   showPicker.value = false;
   
 }
 
 const beginChat = () => {
   if (userStore.userInfo.isLogin) {
-    $router.push("/chat");
+    $router.push({
+
+      path: "/chat",
+      query: {
+        testIndex:selectedIndex.value
+      }
+    });
   } else {
     showNotify({
       type: "warning",
