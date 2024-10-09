@@ -42,6 +42,14 @@
           clearable
           class="input-field"
         />
+        <div v-if="isListening" class="listening-indicator">
+          <span>正在录音...</span>
+        </div>
+        <van-icon
+          name="service-o"
+          style="height: 100%; cursor: pointer"
+          @click="toggleVoiceInput"
+        />
         <van-button round type="primary" @click="sendMessage">发送</van-button>
         <template v-if="!isStop">
           <van-button round type="danger" @click="stopMessage">停止</van-button>
@@ -50,9 +58,7 @@
           <van-button loading type="danger" />
         </template>
       </div>
-      <div  v-else class="score" @click="toScore">
-        对话已结束，点击查看反馈和评价
-      </div>
+      <div v-else class="score" @click="toScore">对话已结束，点击查看反馈和评价</div>
     </div>
   </div>
 </template>
@@ -290,6 +296,60 @@ watch(
 onMounted(() => {
   getHistory();
 });
+const toggleVoiceInput = () => {
+  if (isListening.value) {
+    stopListening();
+  } else {
+    startListening();
+  }
+};
+
+const recognition = ref<any>(null);
+const isListening = ref(false); // 控制语音识别状态
+const transcript = ref(""); // 保存语音转文字结果
+const isSpeechRecognitionSupported =
+  !!window.SpeechRecognition || !!window.webkitSpeechRecognition;
+
+if (isSpeechRecognitionSupported) {
+  recognition.value = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.value.lang = "zh-CN"; // 设置语言为中文
+  recognition.value.interimResults = false; // 是否显示实时结果
+  recognition.value.continuous = false; // 是否连续监听
+}
+
+const startListening = () => {
+  if (recognition.value) {
+    recognition.value.start(); // 开始语音识别
+    isListening.value = true;
+  }
+};
+
+const stopListening = () => {
+  if (recognition.value) {
+    recognition.value.stop(); // 停止语音识别
+    isListening.value = false;
+  }
+};
+
+if (recognition.value) {
+  recognition.value.onresult = (event: any) => {
+    const result = event.results[0][0].transcript; // 获取语音转换后的文本
+    transcript.value = result; // 保存结果
+    input.value = result; // 将结果填充到输入框
+  };
+
+  recognition.value.onspeechend = () => {
+    stopListening(); // 当检测到用户停止说话时，停止监听
+  };
+
+  recognition.value.onerror = (event: any) => {
+    stopListening(); // 处理错误时停止监听
+    showNotify({
+      type: "danger",
+      message: "语音识别失败，请重试",
+    });
+  };
+}
 </script>
 
 <style scoped lang="scss">
@@ -394,7 +454,4 @@ onMounted(() => {
 .van-button--loading {
   border-radius: 5px;
 }
-
- 
-
 </style>
