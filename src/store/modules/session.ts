@@ -4,17 +4,17 @@ export const useSessionStore = defineStore('sessionStore', () => {
 
   const sessions = ref([
     {
-      name: '场景1',
-      dec:'场景1的描述',
+      name: '顾客食品品质问题',
+      dec:'顾客食品品质有问题，有头发丝或飞虫，需要解决',
     },
     {
-      name: '场景2',
-      dec:'场景2的描述',
+      name: '卫生环境服务问题',
+      dec:'门店卫生清洁不到位，需要解决',
 
     },
     {
-      name: '场景3',
-      dec:'场景3的描述',
+      name: '顾客餐点有遗漏',
+      dec:'顾客菜单少上漏上，需要解决',
 
     },
     
