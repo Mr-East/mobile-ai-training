@@ -12,7 +12,7 @@
               height="40px"
               :src="getAssetsFile(userStore.userInfo.avatar)"
             />
-            <div class="message-content">{{ message.content }}</div>
+            <div class="message-content user">{{ message.content }}</div>
           </div>
         </div>
         <div v-else class="ai-message">
@@ -23,7 +23,7 @@
             height="40px"
             :src="getAssetsFile('@/assets/Ai.png')"
           />
-          <div class="message-content">{{ message.content }}</div>
+          <div class="message-content ai">{{ message.content }}</div>
         </div>
       </div>
       <!-- 如果正在等待 AI 回复，显示加载动画 -->
@@ -543,6 +543,13 @@ if (recognition.value) {
     max-width: 50%;
     margin-right: 60px;
     text-align: left;
+    
+  }
+  
+  .user{
+    background-color: #17C3CE;
+    color: white;
+    // clip-path: ;
   }
 }
 

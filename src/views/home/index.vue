@@ -107,10 +107,11 @@ defineOptions({ name: "Home" });
     // background-size: cover;
     .robot-body {
       position: absolute;
-      left: 5%;
-      bottom: 25%;
+      left: 35%;
+      bottom: 50%;
       width: 110%;
       height: 70%;
+      transform: translateX(-50%);
       background: url("../../assets/robot_body.png") no-repeat;
       background-size: contain;
       z-index: 2;
@@ -131,8 +132,8 @@ defineOptions({ name: "Home" });
     }
     .robot-bottom {
       position: absolute;
-      bottom: 0;
-      left: 0;
+      bottom: 30%;
+      left: 25%;
       width: 90%;
       height: 40%;
       background: url("../../assets/robot_bottom.png") no-repeat;
@@ -143,13 +144,18 @@ defineOptions({ name: "Home" });
 
   .begin {
     position: absolute;
-    right: 10%;
-    bottom: 30%;
-    transform: translateY(50%);
-    width: 100px;
-    height: 50px;
+    left: 50%;
+    bottom: 5%;
+    transform: translateX(-50%);
+    width: 70%;
+      
     .van-button {
+      font-size: 24px;
+      height: 70px;
+      box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
       border-radius: 25px;
+      background-color: #17C3CE;
+      border-color: #17C3CE;
     }
   }
 }
