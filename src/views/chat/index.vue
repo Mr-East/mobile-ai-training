@@ -522,6 +522,13 @@ if (recognition.value) {
   flex: 1;
   padding: 16px;
   overflow-y: auto;
+  // background-color: rgba(255,255,255,0.5);
+
+  background-image: url('@/assets/ChatBG.jpg')  ;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
+  z-index: 0;
 }
 
 .message {
@@ -578,7 +585,6 @@ if (recognition.value) {
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: #fff;
   border-top: 1px solid #ebebeb;
 }
 

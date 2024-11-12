@@ -127,7 +127,7 @@ defineOptions({ name: "Home" });
       transform: translateX(-50%);
       background: url("../../assets/robot_body.png") no-repeat;
       background-size: contain;
-      z-index: 2;
+      z-index: 1;
 
       animation: mymove 1.5s infinite;
       -webkit-animation: mymove 1.5s infinite;
@@ -151,7 +151,7 @@ defineOptions({ name: "Home" });
       height: 40%;
       background: url("../../assets/robot_bottom.png") no-repeat;
       background-size: contain;
-      z-index: 1;
+      z-index: 0;
     }
   }
 
@@ -161,7 +161,7 @@ defineOptions({ name: "Home" });
     bottom: 0;
     transform: translateX(-50%);
     width: 70%;
-      
+    margin-bottom: 10px;
     .van-button {
       font-size: 16px;
       height: 50px;

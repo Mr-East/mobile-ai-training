@@ -1,6 +1,7 @@
 <template>
   <div class="user-container">
     <div v-if="userStore.userInfo.isLogin" class="logout_wrapper">
+    <div class="title">个人页面</div>
       <van-cell-group>
         <div class="user-info">
           <van-image
@@ -13,6 +14,7 @@
           <p class="username">{{ userStore.userInfo.username }}</p>
         </div>
       </van-cell-group>
+      <div v-if="!userStore.userInfo.isAdmin" class="title">员工评分</div>
       <div v-if="!userStore.userInfo.isAdmin" id="scoreChart" style="width: 100%; height: 300px"></div>
       <div class="logout">
         <van-button type="primary" size="normal" block @click="onLogout"
@@ -22,10 +24,11 @@
     </div>
     <div v-else class="login">
       <div class="login-bg"></div>
-      <div class="login-title">智训</div>
+      <!-- <div class="login-title">智训</div> -->
       <div class="login_wrapper">
+      <div class="title">登录</div>
         <van-cell-group>
-          <van-field v-model="loginUsername" label="用户名" placeholder="请输入用户名" />
+          <van-field v-model="loginUsername" label="用户名" placeholder="请输入用户名"  />
           <van-field
             v-model="password"
             label="密码"
@@ -34,12 +37,12 @@
           />
         </van-cell-group>
 
-        <div class="login-button">
-          <van-button type="primary" block @click="onLogin" size="normal"
+     
+          <div class="register">没有账号?立即注册</div>
+        
+        <van-button type="primary" block @click="onLogin" size="normal" class="login-button"
             >登录
             </van-button>
-          <div class="register">没有账号?立即注册</div>
-        </div>
       </div>
     </div>
   </div>
@@ -166,6 +169,23 @@ onMounted(() => {
   padding: 20px;
   border-radius: 25px;
   margin: 0 auto;
+  .title{
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 25px;
+    margin-left: 15px;
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      top: 9px;
+      left: -20px;
+      width: 3px;
+      height: 30px;
+      background-color: #17C3CE;
+      margin-left: 10px;
+    }
+  }
 }
 .logout {
   margin-top: 20px;
@@ -173,12 +193,11 @@ onMounted(() => {
 .login {
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // flex-direction: column;
   position: relative;
-
   &-title {
     font-size: 48px;
     font-weight: 500;
@@ -188,39 +207,77 @@ onMounted(() => {
   }
   &-bg {
     position: absolute;
-    top: -35%;
-    left: 0;
-    width: 100%;
-    height: 135%;
-    background: url("@/assets/loginBG.png") no-repeat center center;
-    background-size: cover;
+    bottom: 0;
+    right: 0;
+    width: 80%;
+    height: 40%;
+    background: url("@/assets/Chatbot.png") no-repeat center center;
+    background-size: contain;
     z-index: 0;
   }
 }
 .login_wrapper {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 80%;
   background-color: #fff;
   padding: 20px;
   border-radius: 25px;
   margin: 0 auto;
   z-index: 1;
+  position: absolute;
+  .title{
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 25px;
+    margin-left: 15px;
+    position: relative;
+    &::after{
+      content: '';
+      position: absolute;
+      top: 9px;
+      left: -20px;
+      width: 3px;
+      height: 30px;
+      background-color: #17C3CE;
+      margin-left: 10px;
+    }
+  }
 }
 
-.login-button {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
+
+.van-field{
+  margin-bottom: 10px;
+  height: 70px;
+  font-size: 16px;
+}
+
+// .van-button {
+//     margin: 0 auto;
+//     height: 25px;
+//     width: 80%;
+//     border-radius: 25px;
+//     text-align: center;
+//   }
+
   .van-button {
-    height: 25px;
-    width: 40%;
-    border-radius: 25px;
-  }
-  .register {
+      font-size: 16px;
+      height: 50px;
+      box-shadow: 0px 4px 4px rgba(0,0,0,0.15);
+      border-radius: 14px;
+      background-color: #17C3CE;
+      border-color: #17C3CE;
+    }
+.register {
+  margin: 10px 0px;
     line-height: 25px;
     font-size: 16px;
     cursor: pointer;
-
+    text-align: right;
     color: #1989fa;
+    
   }
-}
+
 </style>
