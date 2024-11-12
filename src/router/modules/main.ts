@@ -7,7 +7,7 @@ export const main: Array<RouteRecordRaw> = [
     component: () => import('@/views/home/index.vue'),
     meta: {
       title: '首页',
-      icon: 'home-o',
+      icon: 'wap-home',
       hidden: false,
     },
   },
@@ -17,7 +17,7 @@ export const main: Array<RouteRecordRaw> = [
     component: () => import('@/views/user/index.vue'),
     meta: {
       title: '我的',
-      icon: 'user-o',
+      icon: 'user',
       hidden: false,
     },
   },
@@ -27,7 +27,7 @@ export const main: Array<RouteRecordRaw> = [
     component: () => import('@/views/chat/index.vue'),
     meta: {
       title: 'AI陪练',
-      icon: 'user-o',
+      icon: 'user',
       hidden: true,
     },
   },
@@ -49,7 +49,7 @@ export const admin: Array<RouteRecordRaw> = [
     component: () => import('@/views/home/index.vue'),
     meta: {
       title: '首页',
-      icon: 'home-o',
+      icon: 'wap-home',
       hidden: false,
     },
   },
@@ -60,7 +60,7 @@ export const admin: Array<RouteRecordRaw> = [
     component: () => import('@/views/employee/index.vue'),
     meta: {
       title: '员工管理',
-      icon: 'friends-o',
+      icon: 'friends',
       hidden: false,
     },
   },
@@ -70,7 +70,7 @@ export const admin: Array<RouteRecordRaw> = [
     component: () => import('@/views/stat/index.vue'),
     meta: {
       title: '数据统计',
-      icon: 'chart-trending-o',
+      icon: 'notes',
       hidden: false,
     },
   },
@@ -80,7 +80,7 @@ export const admin: Array<RouteRecordRaw> = [
     component: () => import('@/views/user/index.vue'),
     meta: {
       title: '我的',
-      icon: 'user-o',
+      icon: 'user',
       hidden: false,
     },
   },

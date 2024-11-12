@@ -15,20 +15,22 @@
         label="场景"
         placeholder="选择场景"
         @click="showPicker = true"
+        class="home-field"
       />
-      <van-popup v-model:show="showPicker" round position="bottom">
-        <van-picker
-          :columns="columns"
-          @cancel="showPicker = false"
-          @confirm="onConfirm"
-        />
-      </van-popup>
+      
     </div>
     <div class="begin">
       <van-button type="primary" size="normal" block @click="beginChat"
         >开始问答
       </van-button>
     </div>
+    <van-popup v-model:show="showPicker" round position="bottom">
+        <van-picker
+          :columns="columns"
+          @cancel="showPicker = false"
+          @confirm="onConfirm"
+        />
+      </van-popup>
   </div>
 </template>
 
@@ -92,10 +94,21 @@ defineOptions({ name: "Home" });
   height: 100%;
 
   .title {
+    position: absolute;
+    bottom: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
     padding: 15px;
     text-align: center;
     font-size: 20px;
+    border-radius: 10px;
 
+    .home-field{
+      border-radius: 10px;
+      box-shadow: 2px 4px 4px 1px rgba(0,0,0,0.05);
+
+    }
   }
   .bg {
     position: absolute;
@@ -145,18 +158,19 @@ defineOptions({ name: "Home" });
   .begin {
     position: absolute;
     left: 50%;
-    bottom: 5%;
+    bottom: 0;
     transform: translateX(-50%);
     width: 70%;
       
     .van-button {
-      font-size: 24px;
-      height: 70px;
+      font-size: 16px;
+      height: 50px;
       box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
-      border-radius: 25px;
+      border-radius: 14px;
       background-color: #17C3CE;
       border-color: #17C3CE;
     }
   }
+  
 }
 </style>

@@ -23,7 +23,7 @@
             height="40px"
             :src="getAssetsFile('@/assets/Ai.png')"
           />
-          <div class="message-content ai">{{ message.content }}</div>
+          <div class="message-content aimsg">{{ message.content }}</div>
         </div>
       </div>
       <!-- 如果正在等待 AI 回复，显示加载动画 -->
@@ -539,7 +539,6 @@ if (recognition.value) {
     line-height: 24px;
     background-color: #fff;
     padding: 10px;
-    border-radius: 8px;
     max-width: 50%;
     margin-right: 60px;
     text-align: left;
@@ -548,9 +547,11 @@ if (recognition.value) {
   
   .user{
     background-color: #17C3CE;
+    border-radius: 10px 0px 10px 10px;
     color: white;
     // clip-path: ;
   }
+  
 }
 
 .ai-message {
@@ -560,10 +561,12 @@ if (recognition.value) {
     line-height: 24px;
     background-color: #fff;
     padding: 10px;
-    border-radius: 8px;
     max-width: 50%;
     margin-left: 50px;
     text-align: left;
+  }
+  .aimsg{
+    border-radius: 0px 10px 10px 10px;
   }
 }
 
