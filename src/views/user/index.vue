@@ -11,7 +11,7 @@
             :src="getAssetsFile(userStore.userInfo.avatar)"
             fit="cover"
           />
-          <p class="username">{{ userStore.userInfo.username }}</p>
+          <p class="username">用户名：{{ userStore.userInfo.username }}</p>
         </div>
       </van-cell-group>
       <div v-if="!userStore.userInfo.isAdmin" class="title">员工评分</div>
@@ -161,7 +161,6 @@ onMounted(() => {
 .username {
   margin-top: 10px;
   font-size: 18px;
-  font-weight: bold;
 }
 .logout_wrapper {
   width: 80%;
@@ -170,18 +169,18 @@ onMounted(() => {
   border-radius: 25px;
   margin: 0 auto;
   .title{
-    font-size: 30px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     margin-bottom: 25px;
     margin-left: 15px;
     position: relative;
     &::after{
       content: '';
       position: absolute;
-      top: 9px;
+      top: 5px;
       left: -20px;
       width: 3px;
-      height: 30px;
+      height: 24px;
       background-color: #17C3CE;
       margin-left: 10px;
     }

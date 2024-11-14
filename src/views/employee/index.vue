@@ -68,7 +68,6 @@
             :label="`描述：${item.dec}`"
             :key="index"
           />
-
         </van-cell-group>
       </div>
     </div>
@@ -108,10 +107,50 @@
 
     <van-popup v-model:show="showSessionPopup" round position="bottom">
       <div style="padding: 20px">
-      <van-field v-model="newSession.name" label="场景名称" placeholder="请输入场景名称" />
-      <van-field v-model="newSession.dec" label="场景描述" placeholder="请输入场景描述" />
-      <van-button type="primary" block @click="addNewSession">添加场景</van-button>
+        <van-field
+          v-model="newSession.name"
+          label="场景名称"
+          placeholder="请输入场景名称"
+        />
+        <van-field
+          v-model="newSession.dec"
+          label="场景描述"
+          placeholder="请输入场景描述"
+        />
+        <van-button type="primary" block @click="addNewSession">添加场景</van-button>
       </div>
+    </van-popup>
+    <!-- 分配任务的弹出框 -->
+    <van-popup v-model:show="showTask" round>
+      <van-field
+        v-model="currentUser.name"
+       
+        readonly
+        label="用户名"
+        placeholder="选择用户"
+        class="home-field"
+      />
+      <van-field
+        v-model="currentSession"
+        is-link
+        readonly
+        label="场景"
+        placeholder="选择场景"
+        @click="showSessionPicker = true"
+        class="home-field"
+      />
+      <div class="bottom">
+        <div class="cancel" @click="showTask = false">取消</div>
+        <div class="confirm" @click="assignTaskConfirm">确认</div>
+      </div>
+    </van-popup>
+
+    <van-popup v-model:show="showSessionPicker" round position="bottom">
+      <van-picker
+        :columns="sessionStore.sessions.map((item) => ({ text: item.name, value: item.name }))"
+        @cancel="showSessionPicker = false"
+        @confirm="onSessionPickConfirm"
+      />
     </van-popup>
   </div>
 </template>
@@ -125,6 +164,7 @@ const sessionStore = useSessionStore();
 const activeTab = ref(0);
 const showPicker = ref(false);
 // 用户列表数据
+
 const users = ref([
   { name: "admin", role: "管理员" },
   { name: "张三", role: "员工" },
@@ -132,11 +172,27 @@ const users = ref([
   { name: "王五", role: "员工" },
   { name: "赵六", role: "员工" },
 ]);
+const currentSession = ref("");
+
+const showSessionPicker = ref(false);
+const onSessionPickConfirm = ({ selectedOptions }) => {
+  currentSession.value = selectedOptions[0].text;
+  showSessionPicker.value = false;
+};
+const currentUser = ref({ name: "", role: "" });
+const showTask = ref(false);
 const showSessionPopup = ref(false);
 const newSession = ref({ name: "", dec: "" });
-const openAddSessionPopup =()=>{
+const openAddSessionPopup = () => {
   showSessionPopup.value = true;
+};
+const assignTaskConfirm = ()=>{
+  showNotify({
+      type: "success",
+      message: "分配任务成功",
+    });
 
+    showTask.value  = false
 }
 const addNewSession = () => {
   if (newSession.value.name && newSession.value.dec) {
@@ -144,12 +200,11 @@ const addNewSession = () => {
     showSessionPopup.value = false;
   } else {
     showNotify({
-      type:"warning",
+      type: "warning",
       message: "请输入场景名称和描述",
     });
   }
-  
-}
+};
 const columns = [
   {
     text: "管理员",
@@ -223,17 +278,8 @@ const deleteUser = (user: { name: string }) => {
 
 // 分配任务操作
 const assignTask = (user: { name: string }) => {
-  showDialog({
-    title: "分配任务",
-    message: `你确定要为 ${user.name} 分配任务吗？`,
-  })
-    .then(() => {
-      // 确认逻辑
-      console.log(`任务已分配给 ${user.name}`);
-    })
-    .catch(() => {
-      // 取消逻辑
-    });
+  showTask.value = true;
+  currentUser.value.name = user.name;
 };
 </script>
 
@@ -268,4 +314,23 @@ const assignTask = (user: { name: string }) => {
 .van-button {
   margin: 10px 10px;
 }
+
+.bottom{
+  border-top: 1px solid #ebebeb;
+  display: flex;
+  padding: 10px;
+  font-size: 16px;
+  .cancel,
+  .confirm{
+    flex: 1;
+    cursor: pointer;
+    text-align: center ;
+    transition: color 0.3s ease;
+    
+    &:hover{
+      color: skyblue;
+    }
+  }
+  }
+
 </style>

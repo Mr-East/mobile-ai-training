@@ -5,7 +5,7 @@
       <div class="robot-bottom"></div>
     </div>
     <div class="title">
-      <div class="sesson-title" style="margin-bottom: 20px;">
+      <div class="sesson-title" style="margin-bottom: 10px;">
         <van-icon name="setting-o" style="margin-right: 10px;"/>请选择场景
         </div>
       <van-field
@@ -26,7 +26,7 @@
     </div>
     <van-popup v-model:show="showPicker" round position="bottom">
         <van-picker
-          :columns="columns"
+          :columns="sessionStore.sessions.map((item) => ({ text: item.name, value: item.name }))"
           @cancel="showPicker = false"
           @confirm="onConfirm"
         />
@@ -59,9 +59,7 @@ const selectedIndex = ref(0)
 const onConfirm = ({selectedOptions,selectedIndexes}) => {
   
   selectedSession.value = selectedOptions[0].text;
-  selectedIndex.value = selectedIndexes[0];
-  console.log(selectedIndex.value);
-  
+  selectedIndex.value = selectedIndexes[0];  
   showPicker.value = false;
   
 }

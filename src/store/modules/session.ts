@@ -15,7 +15,6 @@ export const useSessionStore = defineStore('sessionStore', () => {
     {
       name: '顾客餐点有遗漏',
       dec:'顾客菜单少上漏上，需要解决',
-
     },
     
   ]);

@@ -12,6 +12,16 @@ export const main: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: '/task',
+    name: 'task',
+    component: () => import('@/views/task/index.vue'),
+    meta: {
+      title: '任务',
+      icon: 'todo-list',
+      hidden: false,
+    },
+  },
+  {
     path: '/user',
     name: 'user',
     component: () => import('@/views/user/index.vue'),
@@ -21,6 +31,7 @@ export const main: Array<RouteRecordRaw> = [
       hidden: false,
     },
   },
+  
   {
     path: '/chat',
     name: 'chat',
