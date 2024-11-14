@@ -21,8 +21,9 @@
                 :src="getAssetsFile(task.thumbnail)"
                 alt="视频封面"
                 class="video-thumbnail"
+                
               />
-              <div class="overlay">
+              <div class="overlay" @click="toVideo(task.url)">
                 <van-icon name="play-circle-o" class="play-icon" />
               </div>
             </div>
@@ -80,11 +81,16 @@ const toChat = (index:number)=>{
     }
   });
 }
+const toVideo = (url:string) => {
+  console.log(111);
+  
+  window.open(url, "_blank", "noopener,noreferrer");
 
+};
 // 静态数据示例
 const studyTasks = ref([
-  { title: "观看平台使用手册", completed: true, thumbnail: "@/assets/video1.png" },
-  { title: "观看平台操作流程", completed: false, thumbnail: "@/assets/video2.png" },
+  { title: "观看平台使用手册", completed: true, thumbnail: "@/assets/video1.png",url:'https://www.bilibili.com/video/BV19tUgY5EJY?spm_id_from=333.1007.tianma.1-1-1.click' },
+  { title: "观看平台操作流程", completed: false, thumbnail: "@/assets/video2.png",url:'https://www.bilibili.com/video/BV19tUgY5EJY?spm_id_from=333.1007.tianma.1-1-1.click' },
 ]);
 
 const assessmentTasks = ref([

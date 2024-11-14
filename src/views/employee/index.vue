@@ -3,8 +3,9 @@
     <!-- 侧边栏 -->
     <van-sidebar v-model="activeTab">
       <van-sidebar-item title="权限管理" />
-      <van-sidebar-item title="任务分配" />
+      <van-sidebar-item title="考核分配" />
       <van-sidebar-item title="场景选择" />
+      <van-sidebar-item title="任务分配" />
     </van-sidebar>
 
     <!-- 右侧内容 -->
@@ -70,6 +71,24 @@
           />
         </van-cell-group>
       </div>
+
+      <div v-if="activeTab === 3">
+        <van-cell-group>
+          <van-cell
+            v-for="(user, index) in users.filter((user) => user.role === '员工')"
+            :key="index"
+            :title="user.name"
+            :label="`角色: ${user.role}`"
+          >
+            <template #right-icon>
+              <!-- 分配任务按钮 -->
+              <van-button size="small" type="warning" @click="assignStudyTask(user)">
+                分配任务
+              </van-button>
+            </template>
+          </van-cell>
+        </van-cell-group>
+      </div>
     </div>
 
     <!-- 分配权限的弹出框 -->
@@ -124,7 +143,6 @@
     <van-popup v-model:show="showTask" round>
       <van-field
         v-model="currentUser.name"
-       
         readonly
         label="用户名"
         placeholder="选择用户"
@@ -147,10 +165,34 @@
 
     <van-popup v-model:show="showSessionPicker" round position="bottom">
       <van-picker
-        :columns="sessionStore.sessions.map((item) => ({ text: item.name, value: item.name }))"
+        :columns="
+          sessionStore.sessions.map((item) => ({ text: item.name, value: item.name }))
+        "
         @cancel="showSessionPicker = false"
         @confirm="onSessionPickConfirm"
       />
+    </van-popup>
+
+    <!-- 添加任务 -->
+    <van-popup v-model:show="showAddTaskPopup" round position="bottom">
+      <div style="padding: 20px">
+        <van-field
+          v-model="currentUser.name"
+          label="员工名称"
+          placeholder=""
+        />
+        <van-field
+          v-model="newSession.name"
+          label="任务名称"
+          placeholder="请输入任务名称"
+        />
+        <van-field
+          v-model="newSession.dec"
+          label="任务链接"
+          placeholder="请输入视频链接"
+        />
+        <van-button type="primary" block @click="addTask">添加任务</van-button>
+      </div>
     </van-popup>
   </div>
 </template>
@@ -173,11 +215,25 @@ const users = ref([
   { name: "赵六", role: "员工" },
 ]);
 const currentSession = ref("");
-
+const showAddTaskPopup = ref(false)
 const showSessionPicker = ref(false);
 const onSessionPickConfirm = ({ selectedOptions }) => {
   currentSession.value = selectedOptions[0].text;
   showSessionPicker.value = false;
+};
+const addTask = () => {
+
+
+  showAddTaskPopup.value = false;
+  showNotify({
+    type: "success",
+    message: "添加任务成功",
+  })
+};
+const assignStudyTask = (user: any) => {
+  showAddTaskPopup.value  = true
+  currentUser.value.name = user.name
+
 };
 const currentUser = ref({ name: "", role: "" });
 const showTask = ref(false);
@@ -186,14 +242,14 @@ const newSession = ref({ name: "", dec: "" });
 const openAddSessionPopup = () => {
   showSessionPopup.value = true;
 };
-const assignTaskConfirm = ()=>{
+const assignTaskConfirm = () => {
   showNotify({
-      type: "success",
-      message: "分配任务成功",
-    });
+    type: "success",
+    message: "分配任务成功",
+  });
 
-    showTask.value  = false
-}
+  showTask.value = false;
+};
 const addNewSession = () => {
   if (newSession.value.name && newSession.value.dec) {
     sessionStore.addSession(newSession.value);
@@ -315,22 +371,21 @@ const assignTask = (user: { name: string }) => {
   margin: 10px 10px;
 }
 
-.bottom{
+.bottom {
   border-top: 1px solid #ebebeb;
   display: flex;
   padding: 10px;
   font-size: 16px;
   .cancel,
-  .confirm{
+  .confirm {
     flex: 1;
     cursor: pointer;
-    text-align: center ;
+    text-align: center;
     transition: color 0.3s ease;
-    
-    &:hover{
+
+    &:hover {
       color: skyblue;
     }
   }
-  }
-
+}
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div class="admin-stat-container">
     <van-nav-bar title="管理员统计界面" />
+    
     <!-- 对话总体数量 -->
     <div id="conversationChart" style="width: 100%; height: 300px"></div>
 
@@ -15,11 +16,28 @@
       id="completionRateChart"
       style="width: 100%; height: 300px; margin-top: 20px"
     ></div>
+
+    <!-- 排行榜 -->
+    <van-cell-group title="员工综合评分排行榜">
+      <van-cell
+        v-for="(employee, index) in sortedEmployees"
+        :key="employee.name"
+        :title="employee.name"
+        :label="`角色: ${employee.role}`"
+        :value="`评分: ${employee.score}`"
+      >
+        <template #icon>
+          <div class="icon">
+          <van-icon name="medal-o" color="gold"  />
+        </div>
+        </template>
+      </van-cell>
+    </van-cell-group>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import * as echarts from "echarts";
 
 // 对话总体数量数据（柱状图）
@@ -36,9 +54,22 @@ const averageScoreData = {
 
 // 培训完成率数据（饼图）
 const completionRateData = {
-  modules: ["任务一", "任务二", "任务三", "任务四"],
-  rates: [90, 75, 80, 95], // 每个培训模块的完成率百分比
+  modules: ["任务一", "任务二"],
+  rates: [90, 75],
 };
+
+// 员工综合评分数据
+const employees = [
+  { name: "张三", role: "员工", score: 7.8 },
+  { name: "李四", role: "员工", score: 8.5 },
+  { name: "王五", role: "员工", score: 7.3 },
+  { name: "赵六", role: "员工", score: 8.1 },
+];
+
+// 根据评分从高到低排序
+const sortedEmployees = computed(() => {
+  return employees.slice().sort((a, b) => b.score - a.score);
+});
 
 // 初始化图表
 const initConversationChart = () => {
@@ -150,4 +181,6 @@ onMounted(() => {
 #completionRateChart {
   margin-bottom: 20px;
 }
+
+
 </style>
