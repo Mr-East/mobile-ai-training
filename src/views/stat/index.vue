@@ -36,7 +36,7 @@ const averageScoreData = {
 
 // 培训完成率数据（饼图）
 const completionRateData = {
-  modules: ["模块一", "模块二", "模块三", "模块四"],
+  modules: ["任务一", "任务二", "任务三", "任务四"],
   rates: [90, 75, 80, 95], // 每个培训模块的完成率百分比
 };
 
@@ -105,7 +105,7 @@ const initCompletionRateChart = () => {
   const myChart = echarts.init(chartDom);
   const option = {
     title: {
-      text: "培训完成率",
+      text: "学习完成率",
       left: "left",
     },
     tooltip: {
