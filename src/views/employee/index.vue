@@ -73,20 +73,17 @@
       </div>
 
       <div v-if="activeTab === 3">
+        <div class="guant-title">
+          <span>任务列表</span>
+          <van-button type="primary" @click="openAddTask">新增任务</van-button>
+        </div>
         <van-cell-group>
           <van-cell
-            v-for="(user, index) in users.filter((user) => user.role === '员工')"
+            v-for="(item, index) in taskList"
+            :title="item.name"
+            :label="`描述：${item.dec}`"
             :key="index"
-            :title="user.name"
-            :label="`角色: ${user.role}`"
-          >
-            <template #right-icon>
-              <!-- 分配任务按钮 -->
-              <van-button size="small" type="warning" @click="assignStudyTask(user)">
-                分配任务
-              </van-button>
-            </template>
-          </van-cell>
+          />
         </van-cell-group>
       </div>
     </div>
@@ -177,21 +174,21 @@
     <van-popup v-model:show="showAddTaskPopup" round position="bottom">
       <div style="padding: 20px">
         <van-field
-          v-model="currentUser.name"
-          label="员工名称"
-          placeholder=""
-        />
-        <van-field
-          v-model="newSession.name"
+          v-model="newTask.name"
           label="任务名称"
           placeholder="请输入任务名称"
         />
         <van-field
-          v-model="newSession.dec"
+          v-model="newTask.dec"
+          label="任务描述"
+          placeholder="请输入任务描述"
+        />
+        <van-field
+          v-model="newTask.url"
           label="任务链接"
           placeholder="请输入视频链接"
         />
-        <van-button type="primary" block @click="addTask">添加任务</van-button>
+        <van-button type="primary" block @click="addNewTask">添加任务</van-button>
       </div>
     </van-popup>
   </div>
@@ -206,7 +203,24 @@ const sessionStore = useSessionStore();
 const activeTab = ref(0);
 const showPicker = ref(false);
 // 用户列表数据
-
+const newTask = ref({
+  name:'',
+  dec:'',
+  url:'',
+})
+const addNewTask = () => {
+  taskList.value.push(newTask.value)
+  showAddTaskPopup.value = false
+  newTask.value = {
+    name:'',
+  dec:'',
+  url:'',
+  }
+  showNotify({
+    type: "success",
+    message: "添加成功",
+  });
+};
 const users = ref([
   { name: "admin", role: "管理员" },
   { name: "张三", role: "员工" },
@@ -221,20 +235,16 @@ const onSessionPickConfirm = ({ selectedOptions }) => {
   currentSession.value = selectedOptions[0].text;
   showSessionPicker.value = false;
 };
-const addTask = () => {
+const openAddTask = () =>{
+  showAddTaskPopup.value = true
+}
 
+const taskList = ref([
+  { name: "观看平台使用手册", dec: "平台使用快速上手" },
+  { name: "观看平台操作流程", dec: "平台操作及流程说明" },
+ 
+ ])
 
-  showAddTaskPopup.value = false;
-  showNotify({
-    type: "success",
-    message: "添加任务成功",
-  })
-};
-const assignStudyTask = (user: any) => {
-  showAddTaskPopup.value  = true
-  currentUser.value.name = user.name
-
-};
 const currentUser = ref({ name: "", role: "" });
 const showTask = ref(false);
 const showSessionPopup = ref(false);
@@ -242,6 +252,8 @@ const newSession = ref({ name: "", dec: "" });
 const openAddSessionPopup = () => {
   showSessionPopup.value = true;
 };
+
+
 const assignTaskConfirm = () => {
   showNotify({
     type: "success",
